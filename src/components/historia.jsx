@@ -12,38 +12,32 @@ export default class Historia extends React.Component {
   };
 
   componentDidUpdate(prevState) {
-    if (prevState.seleccionPrevia !== this.state.seleccionPrevia) {
+    if (
+      prevState.seleccionPrevia !== this.state.seleccionPrevia &&
+      this.state.seleccionPrevia !== ""
+    ) {
       this.state.historialDeOpciones.push(this.state.seleccionPrevia);
     }
   }
 
   buttonClick = (e) => {
     if (this.state.acumulador < 6) {
-      this.accumulator(e);
-      this.cambiarDatosJson(e);
-      this.actualizarSeleccionPrevia(e);
+      this.setState({
+        acumulador: this.state.acumulador + 1,
+        datosJson: data.find((element) => element.id === e.target.id),
+        seleccionPrevia: e.target.id.slice(1, 2).toUpperCase(),
+      });
     } else {
       e.preventDefault();
-      alert("FIN");
+      if (window.confirm("La historia termino! ¿Queres volver a empezar?")) {
+        this.setState({
+          acumulador: 2,
+          datosJson: data[0],
+          seleccionPrevia: "",
+          historialDeOpciones: [],
+        });
+      }
     }
-  };
-
-  accumulator = (e) => {
-    this.setState({
-      acumulador: this.state.acumulador + 1,
-    });
-  };
-
-  cambiarDatosJson = (e) => {
-    this.setState({
-      datosJson: data.find((element) => element.id === e.target.id),
-    });
-  };
-
-  actualizarSeleccionPrevia = (e) => {
-    this.setState({
-      seleccionPrevia: e.target.id.slice(1, 2).toUpperCase(),
-    });
   };
 
   render() {
